@@ -1,0 +1,19 @@
+---
+layout: post
+title:  "Answering Machine Detection via Stochastic Gradient Descent"
+date:   2015-07-26 16:35:52
+categories: machine learning, data science, signal processing
+---
+
+Missing calls from potential or existing customers can be a difficult problem for many companies. At iCracked, we identified an opportunity to improve our customers' experience through reducing the number of customer calls to our technicians that go to voicemail. To accomplish this, we needed a reliable method for algorithmically detecting answering machines within call recordings.
+
+To begin building a classification model for phone calls, we needed a lot of data. Call recordings and call dispositions from our outbound call center would provide a perfect corpora for the model. At the call center, agents actively dial customers to follow up on existing repair appointments, or accept inbound calls to help a customer schedule an on-demand repair. Each call is flagged with a disposition ( 'appointment scheduled', 'customer will call back', 'no answer / voicemail', etc.) and recorded as a .wav file. This data would be used as training data for a classification model.
+
+In addition to the raw recordings and dispositions, we collect ample metadata from which a model could be constructed - call duration, time of day, caller id, number of repeat calls, etc. were all available to be used.
+
+Early attempts at call classification proved that metadata alone would not be suffcient, and creating features from the raw audio arrays did not prove successful.[other attmepts] To build an accurate model, it would be necessary to transcribe the phone calls and perform natural language processing on the transcriptions.
+
+For this application, we needed a transcription service that was fast, highly available, and low cost; with millions of calls answered per year, a solution which charged by the minute could become quite expensive. Initially, it appeared as though high accuracy would be imperative, but it eventually became clear that high precision was much more important. We ultimately selected CMU Sphinx, a high-performance open-source speech recognition library with support for custom acoustic models.
+
+CMU Sphinx is highly configurable, but customizing an acoustic language model for multiple speakers requires roughly 200 hours of accurately transcribed training data. Without these transcriptions, we would not be able to create an acoustic model from scratch, and needed to make do with an available acoustic model that would work with our call recordings. 
+
